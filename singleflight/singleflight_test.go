@@ -54,11 +54,11 @@ func TestDoErr(t *testing.T) {
 
 func TestDoDupSuppress(t *testing.T) {
 	var g Group
-	c := make(chan string)
+	//c := make(chan string)
 	var calls int32
 	fn := func() (interface{}, error) {
 		atomic.AddInt32(&calls, 1)
-		return <-c, nil
+		return "bar", nil
 	}
 
 	const n = 10
@@ -77,7 +77,7 @@ func TestDoDupSuppress(t *testing.T) {
 		}()
 	}
 	time.Sleep(100 * time.Millisecond) // let goroutines above block
-	c <- "bar"
+	//c <- "bar"
 	wg.Wait()
 	if got := atomic.LoadInt32(&calls); got != 1 {
 		t.Errorf("number of calls = %d; want 1", got)
